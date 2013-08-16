@@ -38,7 +38,11 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".SettingsActivity" android:label="settings_activity"/>
+        <activity android:name=".SettingsActivity"
+                  android:label="Mshengu"
+                  android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".settings.UrlAddActivity" android:label="Mshengu"/>
+        <activity android:name=".settings.UserActivity" android:label="Mshengu"/>
         <meta-data
                 android:name="com.google.android.maps.v2.API_KEY"
                 android:value="AIzaSyC6mJq0dsSvxnbxeEWXefRBl5a607kgwnw"/>

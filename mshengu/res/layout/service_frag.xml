@@ -2,27 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical" >
+              android:orientation="vertical">
 
     <Button
             android:id="@+id/scanButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Scan Toilet Unit" />
+            style="@style/btnStyleGenoa"
+            android:text="Scan Toilet Unit"/>
 
     <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
         <TableRow>
 
             <TextView
                     android:text="Unit ID:"
-                    android:width="120dp" />
+                    android:width="120dp"/>
 
             <EditText
                     android:id="@+id/unitID"
-                    android:width="200dp" />
+                    android:width="200dp"/>
         </TableRow>
 
     </TableLayout>
@@ -50,12 +51,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Comments"
-            android:id="@+id/comments" />
+            android:id="@+id/comments"/>
 
     <Button
             android:id="@+id/tagButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tag Unit Location" />
+            android:text="Tag Unit Location"/>
 
 </LinearLayout>

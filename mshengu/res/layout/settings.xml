@@ -5,9 +5,46 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Back to Main App"
-            android:id="@+id/back_button" android:layout_gravity="left|center_vertical"/>
+            style="@style/btnStyleGenoa"
+            android:text="App Settings"
+            android:id="@+id/settings_button" android:layout_gravity="center"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/btnStyleGenoa"
+            android:text="User Information"
+            android:id="@+id/user_button" android:layout_gravity="center"/>
+    <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TableRow>
+
+            <TextView
+                    android:text="Server Address:"
+                    android:width="120dp"/>
+
+            <TextView
+                    android:id="@+id/server_address"
+                    android:width="200dp"/>
+        </TableRow>
+
+
+        <TableRow>
+
+            <TextView
+                    android:text="User Email:"
+                    android:width="120dp"/>
+
+            <TextView
+
+                    android:id="@+id/user_email"
+                    android:width="200dp"/>
+        </TableRow>
+
+    </TableLayout>
 </LinearLayout>
