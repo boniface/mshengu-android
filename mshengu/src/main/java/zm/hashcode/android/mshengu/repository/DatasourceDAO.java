@@ -3,6 +3,8 @@ package zm.hashcode.android.mshengu.repository;
 import zm.hashcode.android.mshengu.model.Settings;
 import zm.hashcode.android.mshengu.model.User;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: boniface
@@ -34,4 +36,5 @@ public interface DatasourceDAO {
     public User getUser();
 
 
+    List<Settings> getSetiingsList();
 }

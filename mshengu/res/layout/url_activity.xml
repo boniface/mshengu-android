@@ -3,6 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
               android:layout_height="match_parent">
 
 
@@ -14,7 +16,9 @@
             android:text="Server Address (URL)"
             android:textAppearance="?android:attr/textAppearance"
             android:textSize="20sp"
-            android:id="@+id/textView" android:layout_gravity="left|center_vertical"/>
+            android:id="@+id/textView"
+            android:layout_gravity="left|center_vertical"/>
+
     <EditText
 
             android:layout_width="fill_parent"
@@ -22,17 +26,28 @@
             android:layout_margin="10dp"
             android:textSize="24dp"
             android:inputType="textUri"
-            android:id="@+id/site_address_url" android:layout_gravity="left|center_vertical"/>
+            android:id="@+id/input_site_address_url"
+            android:layout_gravity="left|center_vertical"/>
+
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:textSize="20dp"
+            android:layout_margin="20dp"
             style="@style/btnStylelivid_brown"
             android:text="Add Address"
-            android:id="@+id/url_add_button" android:layout_gravity="center"/>
+            android:id="@+id/url_add_button"
+            android:layout_gravity="center"/>
+
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:textSize="20dp"
+            android:layout_margin="20dp"
             style="@style/btnStylePaprika"
             android:text="Cancel"
-            android:id="@+id/url_cancel" android:layout_gravity="center"/>
+            android:id="@+id/url_cancel"
+            android:layout_gravity="center"/>
 </LinearLayout>

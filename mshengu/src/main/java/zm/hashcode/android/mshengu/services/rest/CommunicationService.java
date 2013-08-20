@@ -1,7 +1,10 @@
 package zm.hashcode.android.mshengu.services.rest;
 
-import zm.hashcode.android.mshengu.model.LocationResource;
-import zm.hashcode.android.mshengu.model.ServiceResource;
+import zm.hashcode.android.mshengu.model.SiteReource;
+import zm.hashcode.android.mshengu.model.UnitDeliveryResource;
+import zm.hashcode.android.mshengu.model.UnitServiceResource;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +14,11 @@ import zm.hashcode.android.mshengu.model.ServiceResource;
  * To change this template use File | Settings | File Templates.
  */
 public interface CommunicationService {
-    public String postDeployment(LocationResource locationResource);
-    public String postService(ServiceResource serviceResource);
-    public boolean checkLocality(LocationResource locationResource);
+    public String postDeployment(UnitDeliveryResource unitDeliveryResource);
+
+    public String postService(UnitServiceResource unitServiceResource);
+
+    public boolean checkLocality(UnitDeliveryResource unitDeliveryResource);
+
+    public List<SiteReource> getSites();
 }

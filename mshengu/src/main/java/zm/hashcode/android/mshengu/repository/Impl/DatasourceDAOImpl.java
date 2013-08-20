@@ -9,6 +9,9 @@ import zm.hashcode.android.mshengu.model.Settings;
 import zm.hashcode.android.mshengu.model.User;
 import zm.hashcode.android.mshengu.repository.DatasourceDAO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: boniface
@@ -50,7 +53,7 @@ public class DatasourceDAOImpl implements DatasourceDAO {
         ContentValues values = new ContentValues();
         values.put(DBAdapter.COLUMN_URL, settings.getUrl());
         // updating row
-        database.update(DBAdapter.TABLE_SETTINGS, values, DBAdapter.COLUMN_ID + " = ?",
+        database.update(DBAdapter.TABLE_SETTINGS, values, DBAdapter.COLUMN_ID + " = ? ",
                 new String[]{String.valueOf(settings.getId())});
         close();
     }
@@ -59,7 +62,7 @@ public class DatasourceDAOImpl implements DatasourceDAO {
     public Settings findSettingById(int id) {
         open();
         Cursor cursor = database.query(DBAdapter.TABLE_SETTINGS, new String[]{DBAdapter.COLUMN_ID,
-                DBAdapter.COLUMN_URL}, DBAdapter.COLUMN_ID + "=?",
+                DBAdapter.COLUMN_URL}, DBAdapter.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
@@ -73,7 +76,7 @@ public class DatasourceDAOImpl implements DatasourceDAO {
     @Override
     public void deleteSettings(Settings settings) {
         open();
-        database.delete(DBAdapter.TABLE_SETTINGS, DBAdapter.COLUMN_ID + " = ?", new String[]{String.valueOf(settings.getId())});
+        database.delete(DBAdapter.TABLE_SETTINGS, DBAdapter.COLUMN_ID + " = ? ", new String[]{String.valueOf(settings.getId())});
 
         close();
     }
@@ -116,7 +119,7 @@ public class DatasourceDAOImpl implements DatasourceDAO {
         values.put(DBAdapter.COLUMN_EMAIL, user.getEmail()); // Settings URL
         values.put(DBAdapter.COLUMN_AUTH, user.getAuth()); // Settings URL
         // updating row
-        database.update(DBAdapter.TABLE_MSHENGU_USER, values, DBAdapter.COLUMN_ID + " = ?",
+        database.update(DBAdapter.TABLE_MSHENGU_USER, values, DBAdapter.COLUMN_ID + " = ? ",
                 new String[]{String.valueOf(user.getId())});
         close();
     }
@@ -125,7 +128,7 @@ public class DatasourceDAOImpl implements DatasourceDAO {
     public User findUserById(int id) {
         open();
         Cursor cursor = database.query(DBAdapter.TABLE_MSHENGU_USER, new String[]{DBAdapter.COLUMN_ID,
-                DBAdapter.COLUMN_EMAIL, DBAdapter.COLUMN_AUTH}, DBAdapter.COLUMN_ID + "=?",
+                DBAdapter.COLUMN_EMAIL, DBAdapter.COLUMN_AUTH}, DBAdapter.COLUMN_ID + " =? ",
                 new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
@@ -163,5 +166,27 @@ public class DatasourceDAOImpl implements DatasourceDAO {
 
         close();
         return user;
+    }
+
+    @Override
+    public List<Settings> getSetiingsList() {
+        String selectQuery = "SELECT  * FROM " + DBAdapter.TABLE_SETTINGS;
+        List<Settings> sets = new ArrayList<Settings>();
+        open();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                final Settings settings = new Settings();
+                settings.setId(cursor.getInt(0));
+                settings.setUrl(cursor.getString(1));
+                sets.add(settings);
+            } while (cursor.moveToNext());
+        }
+
+        close();
+
+        return sets;
     }
 }

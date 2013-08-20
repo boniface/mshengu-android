@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
               android:orientation="vertical">
 
     <Button
@@ -9,6 +11,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/btnStyleGenoa"
+            android:textSize="30dp"
+            android:layout_margin="10dp"
+            android:padding="40dp"
             android:text="Scan Toilet Unit"/>
 
     <TableLayout
@@ -32,31 +37,71 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Pump-Out"
-            android:id="@+id/pumpout" android:checked="false"/>
+            android:id="@+id/pumpout"
+            android:checked="false"/>
+
     <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Flush"
-            android:id="@+id/flush" android:layout_gravity="left|center_vertical" android:checked="false"/>
+            android:id="@+id/flush"
+            android:layout_gravity="left|center_vertical"
+            android:checked="false"/>
+
     <CheckBox
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Chemicals"
-            android:id="@+id/chemical" android:checked="false"/>
+            android:id="@+id/chemical"
+            android:checked="false"/>
+
     <ScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/scrollView" android:layout_gravity="center"/>
+            android:id="@+id/scrollView"
+            android:layout_gravity="center"/>
+
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Comments"
             android:id="@+id/comments"/>
 
+    <TextView
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/textView1"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/country_prompt"/>
+
+    <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/country_prompt"
+            android:entries="@array/country_array"/>
+
+    <TextView
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/textView2"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/animal_prompt"/>
+
+    <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/animal_prompt"/>
+
     <Button
             android:id="@+id/tagButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tag Unit Location"/>
+            android:textSize="30dp"
+            android:layout_margin="10dp"
+            android:padding="40dp"
+            style="@style/btnStyleGenoa"
+            android:text="Submit Service"/>
 
 </LinearLayout>

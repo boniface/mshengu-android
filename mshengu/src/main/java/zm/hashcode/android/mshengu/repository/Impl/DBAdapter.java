@@ -26,16 +26,16 @@ public class DBAdapter extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Database creation sql statement
-    private static final String CREATE_SETTINGS_TABLE = "create table IF NOT EXISTS"
-            + TABLE_SETTINGS + "("
+    private static final String CREATE_SETTINGS_TABLE = "create table IF NOT EXISTS "
+            + TABLE_SETTINGS + " ( "
             + COLUMN_ID + " integer primary key autoincrement, "
-            + COLUMN_URL + " text not null);";
+            + COLUMN_URL + " text not null); ";
 
-    private static final String CREATE_USER_TABLE = "create table IF NOT EXISTS"
+    private static final String CREATE_USER_TABLE = "create table IF NOT EXISTS "
             + TABLE_MSHENGU_USER + "("
             + COLUMN_ID + " integer primary key autoincrement, "
             + COLUMN_EMAIL + " text not null, "
-            + COLUMN_AUTH + " text not null);";
+            + COLUMN_AUTH + " text not null); ";
 
 
     public DBAdapter(Context context) {
@@ -52,10 +52,10 @@ public class DBAdapter extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w(DBAdapter.class.getName(),
                 "Upgrading database from version " + oldVersion + " to "
-                        + newVersion + ", which will destroy all old data");
+                        + newVersion + ", which will destroy all old data ");
 
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SETTINGS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MSHENGU_USER);
+        db.execSQL(" DROP TABLE IF EXISTS " + TABLE_SETTINGS);
+        db.execSQL(" DROP TABLE IF EXISTS " + TABLE_MSHENGU_USER);
 
         onCreate(db);
     }

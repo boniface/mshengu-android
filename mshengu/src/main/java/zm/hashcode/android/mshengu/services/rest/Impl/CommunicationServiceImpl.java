@@ -1,14 +1,19 @@
 package zm.hashcode.android.mshengu.services.rest.Impl;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
-import zm.hashcode.android.mshengu.model.LocationResource;
-import zm.hashcode.android.mshengu.model.ServiceResource;
+import zm.hashcode.android.mshengu.model.SiteReource;
+import zm.hashcode.android.mshengu.model.UnitDeliveryResource;
+import zm.hashcode.android.mshengu.model.UnitServiceResource;
+import zm.hashcode.android.mshengu.repository.DatasourceDAO;
 import zm.hashcode.android.mshengu.services.rest.CommunicationService;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,50 +23,72 @@ import zm.hashcode.android.mshengu.services.rest.CommunicationService;
  * To change this template use File | Settings | File Templates.
  */
 public class CommunicationServiceImpl implements CommunicationService {
+    private DatasourceDAO dao;
+
+    public CommunicationServiceImpl(DatasourceDAO datasourceDAO) {
+        this.dao = datasourceDAO;
+    }
 
 
     @Override
-    public String postDeployment(LocationResource locationResource) {
-        String url = "localhost";
+    public String postDeployment(UnitDeliveryResource unitDeliveryResource) {
+        final String url = dao.getSettings().getUrl() + "tagunit";
 
-        HttpEntity<LocationResource> requestEntity = new HttpEntity<LocationResource>(locationResource, getContentType());
-        // Make the HTTP POST request, marshaling the request to JSON, and the response to a String
-//        ResponseEntity<String> responseEntity = getConnection().exchange(url, HttpMethod.POST, requestEntity, String.class);
-        System.out.println("LATITITUBE !!!!!!!!! " + locationResource.getLatititude());
-        System.out.println("LONGITUTED !!!!!!!! " + locationResource.getLongitude());
-        System.out.println("ID IS !!!!!!!!!!!!!!!!!" + locationResource.getUnitID());
-        return null; // responseEntity.getBody();
+
+        HttpEntity<UnitDeliveryResource> requestEntity = new HttpEntity<UnitDeliveryResource>(unitDeliveryResource, getContentType());
+//        Make the HTTP POST request, marshaling the request to JSON, and the response to a String
+        ResponseEntity<String> responseEntity = getConnection().exchange(url, HttpMethod.POST, requestEntity, String.class);
+
+        return responseEntity.getBody();
     }
 
     @Override
-    public String postService(ServiceResource serviceResource) {
-        String url = "localhost";
+    public String postService(UnitServiceResource unitServiceResource) {
+        final String url = dao.getSettings().getUrl() + "serviceunit";
 
-        HttpEntity<ServiceResource> requestEntity = new HttpEntity<ServiceResource>(serviceResource, getContentType());
+        HttpEntity<UnitServiceResource> requestEntity = new HttpEntity<UnitServiceResource>(unitServiceResource, getContentType());
         // Make the HTTP POST request, marshaling the request to JSON, and the response to a String
-//        ResponseEntity<String> responseEntity = getConnection().exchange(url, HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<String> responseEntity = getConnection().exchange(url, HttpMethod.POST, requestEntity, String.class);
 
-        System.out.println("PUMP_OUT !!!!!!!! " + serviceResource.getTasks().get("pumpout"));
-        System.out.println("FLUSH !!!!!!!! " + serviceResource.getTasks().get("flush"));
-        System.out.println("CHEMICAL !!!!!!!! " + serviceResource.getTasks().get("chemical"));
-        System.out.println("ID IS !!!!!!!!!!!!!!!!!" + serviceResource.getUnitID());
-        System.out.println("Comments IS !!!!!!!!!!!!!!!!!" + serviceResource.getIncident());
-        return null; //responseEntity.getBody();
+        return responseEntity.getBody();
     }
 
     @Override
-    public boolean checkLocality(LocationResource locationResource) {
+    public boolean checkLocality(UnitDeliveryResource unitDeliveryResource) {
         String url = "localhost";
 
-        HttpEntity<LocationResource> requestEntity = new HttpEntity<LocationResource>(locationResource, getContentType());
+        HttpEntity<UnitDeliveryResource> requestEntity = new HttpEntity<UnitDeliveryResource>(unitDeliveryResource, getContentType());
         // Make the HTTP POST request, marshaling the request to JSON, and the response to a String
 //        ResponseEntity<String> responseEntity = getConnection().exchange(url, HttpMethod.POST, requestEntity, String.class);
 
-        System.out.println("LATITITUBE !!!!!!!!! " + locationResource.getLatititude());
-        System.out.println("LONGITUTED !!!!!!!! " + locationResource.getLongitude());
-        System.out.println("ID IS !!!!!!!!!!!!!!!!!" + locationResource.getUnitID());
+
         return true;
     }
+
+    @Override
+    public List<SiteReource> getSites() {
+        final String url = dao.getSettings().getUrl() + "sites";
+        List<SiteReource> sites = new ArrayList<SiteReource>();
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.setAccept(Collections.singletonList(new MediaType("application", "json")));
+        HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
+
+        // Create a new RestTemplate instance
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Add the Gson message converter
+        restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+        System.out.println("The URL IS !!!!!" + url);
+
+        ResponseEntity<SiteReource[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, SiteReource[].class);
+        SiteReource[] events = responseEntity.getBody();
+
+        for (SiteReource event : events) {
+            sites.add(event);
+        }
+        return sites;
+    }
+
 
     private RestTemplate getConnection() {
         final RestTemplate restTemplate = new RestTemplate();

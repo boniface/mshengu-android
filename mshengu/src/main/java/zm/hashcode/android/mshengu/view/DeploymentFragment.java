@@ -4,18 +4,25 @@ import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.*;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.zxing.integration.android.IntentIntegrator;
 import zm.hashcode.android.mshengu.R;
-import zm.hashcode.android.mshengu.model.LocationResource;
+import zm.hashcode.android.mshengu.model.SiteReource;
+import zm.hashcode.android.mshengu.model.UnitDeliveryResource;
+import zm.hashcode.android.mshengu.repository.DatasourceDAO;
+import zm.hashcode.android.mshengu.repository.Impl.DatasourceDAOImpl;
 import zm.hashcode.android.mshengu.services.rest.CommunicationService;
 import zm.hashcode.android.mshengu.services.rest.Impl.CommunicationServiceImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,41 +36,37 @@ public class DeploymentFragment extends SherlockFragment {
     private EditText unitId;
     private EditText latitude;
     private EditText longitude;
+    private Spinner sitesDropdown;
+    private List<String> list = new ArrayList<String>();
+    ;
 
     private View view;
     private double lat;
     private double longi;
+    private String TAG = "Mshengu";
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-      final CommunicationService communicationService = new CommunicationServiceImpl();
+        AsyncCallREST task = new AsyncCallREST();
+        task.execute();
 
 
-        LocationManager locationManager = (LocationManager) getActivity()
-                .getSystemService(Context.LOCATION_SERVICE);
-        // Create Criteria Object to Retrieve Provider
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
-
-        // Get the name of the Best Provider
         String provider = locationManager.getBestProvider(criteria, true);
-
-        // Current Location
-
         Location location = locationManager.getLastKnownLocation(provider);
-
-        // setMapType
-
-        // Get current Latitude
         lat = location.getLatitude();
-        // get Current Longitude
         longi = location.getLongitude();
 
         view = inflater.inflate(R.layout.deployment_frag, container, false);
+        sitesDropdown = (Spinner) view.findViewById(R.id.sites_drop_down);
         unitId = (EditText) view.findViewById(R.id.unitID);
         latitude = (EditText) view.findViewById(R.id.latitude);
         longitude = (EditText) view.findViewById(R.id.longitude);
+
+
         Button scanButton = (Button) view.findViewById(R.id.scanButton);
         scanButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -78,17 +81,60 @@ public class DeploymentFragment extends SherlockFragment {
         Button tagButton = (Button) view.findViewById(R.id.tagButton);
         tagButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                final LocationResource locationResource = new LocationResource();
-                locationResource.setUnitID(unitId.getText().toString());
-                locationResource.setLatititude(latitude.getText().toString());
-                locationResource.setLongitude(longitude.getText().toString());
-                communicationService.postDeployment(locationResource);
+                final UnitDeliveryResource unitDeliveryResource = new UnitDeliveryResource();
+                unitDeliveryResource.setUnitId(unitId.getText().toString());
+                unitDeliveryResource.setLatitude(latitude.getText().toString());
+                unitDeliveryResource.setLongitude(longitude.getText().toString());
+//                System.out.println("THERE IS THE JUICE "+sitesDropdown.g);
+//                communicationService.postDeployment(unitDeliveryResource);
                 unitId.setText("");
                 latitude.setText("");
                 longitude.setText("");
             }
         });
+
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        sitesDropdown.setAdapter(dataAdapter);
+        sitesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                System.out.println(" SHOW ME SOME LOVE ");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                System.out.println("AND HERE TOO ");
+            }
+
+        });
+
+
         return view;
     }
+
+
+    private class AsyncCallREST extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            Log.i(TAG, "doInBackground");
+            getSites();
+            return null;
+        }
+    }
+
+    public void getSites() {
+        DatasourceDAO dao = new DatasourceDAOImpl(getActivity());
+        final CommunicationService communicationService = new CommunicationServiceImpl(dao);
+        List<SiteReource> sites = communicationService.getSites();
+        for (SiteReource siteReource : sites) {
+            list.add(siteReource.getName());
+        }
+
+    }
+
 
 }
