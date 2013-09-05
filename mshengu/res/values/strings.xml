@@ -12,18 +12,15 @@
     <string name="menu_home">Home</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_user_information">User</string>
-    <string name="select">Choose a Site</string>
+    <string name="select_site">Choose a Site</string>
 
-    <string name="country_prompt">Choose a Nordic Country</string>
+    <string name="country_prompt">Choose SITE</string>
     <string-array name="country_array">
-        <item>Denmark</item>
-        <item>Faroe Islands</item>
-        <item>Finland</item>
-        <item>Iceland</item>
-        <item>Norway</item>
-        <item>Svalbard and Jan Mayen</item>
-        <item>Sweden</item>
+        <item>B M Section</item>
+        <item>C T Section</item>
+        <item>R R Section</item>
     </string-array>
-    <string name="animal_prompt">Choose your favorite animal</string>
+
+    <string name="animal_prompt">Choose Site</string>
 
 </resources>

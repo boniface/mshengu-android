@@ -1,9 +1,8 @@
 package zm.hashcode.android.mshengu.services.rest.Impl;
 
 import org.springframework.http.*;
-import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import zm.hashcode.android.mshengu.model.SiteReource;
 import zm.hashcode.android.mshengu.model.UnitDeliveryResource;
@@ -92,8 +91,9 @@ public class CommunicationServiceImpl implements CommunicationService {
 
     private RestTemplate getConnection() {
         final RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-        restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+//        restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
         return restTemplate;
     }
 

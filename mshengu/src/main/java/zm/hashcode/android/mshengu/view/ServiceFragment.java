@@ -4,25 +4,24 @@ import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.zxing.integration.android.IntentIntegrator;
 import zm.hashcode.android.mshengu.R;
-import zm.hashcode.android.mshengu.model.Settings;
-import zm.hashcode.android.mshengu.model.UnitDeliveryResource;
 import zm.hashcode.android.mshengu.model.UnitServiceResource;
 import zm.hashcode.android.mshengu.repository.DatasourceDAO;
 import zm.hashcode.android.mshengu.repository.Impl.DatasourceDAOImpl;
 import zm.hashcode.android.mshengu.services.rest.CommunicationService;
 import zm.hashcode.android.mshengu.services.rest.Impl.CommunicationServiceImpl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,21 +33,21 @@ import java.util.Map;
  */
 public class ServiceFragment extends SherlockFragment {
 
-    private String selectedCountry = null;
-    private String selectedAnimal = null;
 
     private EditText unitId;
     private EditText comments;
 
-    private CheckBox pumpout;
-    private CheckBox flush;
-    private CheckBox chemical;
+    private CheckBox pumpOut;
+    private CheckBox washBucket;
+    private CheckBox suctionOut;
+    private CheckBox scrubFloor;
+    private CheckBox rechargeBacket;
+    private CheckBox cleanPerimeter;
 
 
     private View view;
     private double latitude;
     private double longitude;
-    private String addressString;
 
 
     @Override
@@ -56,7 +55,6 @@ public class ServiceFragment extends SherlockFragment {
 
 
         final DatasourceDAO dao = new DatasourceDAOImpl(getActivity());
-        final CommunicationService communicationService = new CommunicationServiceImpl(dao);
         setHasOptionsMenu(true);
 
 
@@ -85,36 +83,70 @@ public class ServiceFragment extends SherlockFragment {
 
         comments = (EditText) view.findViewById(R.id.comments);
 
-        pumpout = (CheckBox) view.findViewById(R.id.pumpout);
-        flush = (CheckBox) view.findViewById(R.id.flush);
-        chemical = (CheckBox) view.findViewById(R.id.chemical);
+        pumpOut = (CheckBox) view.findViewById(R.id.pumpOut);
+        washBucket = (CheckBox) view.findViewById(R.id.washBucket);
+        suctionOut = (CheckBox) view.findViewById(R.id.suctionOut);
 
-        pumpout.setOnClickListener(new View.OnClickListener() {
+        scrubFloor = (CheckBox) view.findViewById(R.id.scrubFloor);
+        rechargeBacket = (CheckBox) view.findViewById(R.id.rechargeBacket);
+        cleanPerimeter = (CheckBox) view.findViewById(R.id.cleanPerimeter);
+
+        pumpOut.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (((CheckBox) v).isChecked()) {
-                    pumpout.setChecked(true);
+                    pumpOut.setChecked(true);
                 } else {
-                    pumpout.setChecked(false);
+                    pumpOut.setChecked(false);
                 }
             }
         });
 
-        flush.setOnClickListener(new View.OnClickListener() {
+        washBucket.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (((CheckBox) v).isChecked()) {
-                    flush.setChecked(true);
+                    washBucket.setChecked(true);
                 } else {
-                    flush.setChecked(false);
+                    washBucket.setChecked(false);
                 }
             }
         });
 
-        chemical.setOnClickListener(new View.OnClickListener() {
+        suctionOut.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (((CheckBox) v).isChecked()) {
-                    chemical.setChecked(true);
+                    suctionOut.setChecked(true);
                 } else {
-                    chemical.setChecked(false);
+                    suctionOut.setChecked(false);
+                }
+            }
+        });
+
+        scrubFloor.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (((CheckBox) v).isChecked()) {
+                    scrubFloor.setChecked(true);
+                } else {
+                    scrubFloor.setChecked(false);
+                }
+            }
+        });
+
+        rechargeBacket.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (((CheckBox) v).isChecked()) {
+                    rechargeBacket.setChecked(true);
+                } else {
+                    rechargeBacket.setChecked(false);
+                }
+            }
+        });
+
+        cleanPerimeter.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (((CheckBox) v).isChecked()) {
+                    cleanPerimeter.setChecked(true);
+                } else {
+                    cleanPerimeter.setChecked(false);
                 }
             }
         });
@@ -132,120 +164,65 @@ public class ServiceFragment extends SherlockFragment {
             }
         });
 
-        Button tagButton = (Button) view.findViewById(R.id.tagButton);
-        tagButton.setOnClickListener(new View.OnClickListener() {
+        Button submitServiceButton = (Button) view.findViewById(R.id.submit_Service_button);
+        submitServiceButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                final UnitDeliveryResource unitDeliveryResource = new UnitDeliveryResource();
-                unitDeliveryResource.setUnitId(unitId.getText().toString());
-                unitDeliveryResource.setLatitude(String.valueOf(latitude));
-                unitDeliveryResource.setLongitude(String.valueOf(longitude));
 
-                UnitServiceResource unitServiceResource = new UnitServiceResource();
+                final UnitServiceResource unitServiceResource = new UnitServiceResource();
+                unitServiceResource.setLatitude(String.valueOf(latitude));
+                unitServiceResource.setLongitude(String.valueOf(longitude));
                 unitServiceResource.setUnitId(unitId.getText().toString());
                 Map<String, Boolean> tasks = new HashMap<String, Boolean>();
-                tasks.put("pumpout", pumpout.isChecked());
-                tasks.put("flush", flush.isChecked());
-                tasks.put("chemical", chemical.isChecked());
-//                unitServiceResource.setTasks(tasks);
+                tasks.put("pumpOut", pumpOut.isChecked());
+                tasks.put("washBucket", washBucket.isChecked());
+                tasks.put("suctionOut", suctionOut.isChecked());
+                tasks.put("scrubFloor", scrubFloor.isChecked());
+                tasks.put("rechargeBacket", rechargeBacket.isChecked());
+                tasks.put("cleanPerimeter", cleanPerimeter.isChecked());
+
+                unitServiceResource.setServices(tasks);
                 unitServiceResource.setIncident(comments.getText().toString());
-//                if(communicationService.checkLocality(unitDeliveryResource)) {
-//
-//                    communicationService.postService(unitServiceResource);
-//
-//                } else{
-//                    Toast.makeText(getActivity(),"You are out of Range. Data Not submitted!",Toast.LENGTH_LONG).show();
-//                }
 
-
-                List<Settings> sets = dao.getSetiingsList();
-
-                for (Settings set : sets) {
-                    System.out.println("The Name us " + set.getUrl());
-                }
-
-                System.out.println("The ");
+                final AsyncCallPostService post = new AsyncCallPostService(unitServiceResource);
+                post.execute();
 
                 unitId.setText("");
                 comments.setText("");
-                pumpout.setChecked(false);
-                flush.setChecked(false);
-                chemical.setChecked(false);
+                pumpOut.setChecked(false);
+                washBucket.setChecked(false);
+                suctionOut.setChecked(false);
+                scrubFloor.setChecked(false);
+                rechargeBacket.setChecked(false);
+                cleanPerimeter.setChecked(false);
 
 
             }
         });
 
-        //get reference to the spinner from the XML layout
-        Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
-        //attach the listener to the spinner
-        spinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
-        //Dynamically generate a spinner data
-        createSpinnerDropDown();
-
 
         return view;
     }
 
-    public class MyOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
 
-        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+    private class AsyncCallPostService extends AsyncTask<Void, Void, Void> {
+        final UnitServiceResource unitServiceResource;
 
-            String selectedItem = parent.getItemAtPosition(pos).toString();
-
-            //check which spinner triggered the listener
-            switch (parent.getId()) {
-                //country spinner
-                case R.id.spinner:
-                    //make sure the country was already selected during the onCreate
-                    if (selectedCountry != null) {
-                        Toast.makeText(parent.getContext(), "Country you selected is " + selectedItem,
-                                Toast.LENGTH_LONG).show();
-                    }
-                    selectedCountry = selectedItem;
-                    break;
-                //animal spinner
-                case R.id.spinner1:
-                    //make sure the animal was already selected during the onCreate
-                    if (selectedAnimal != null) {
-                        Toast.makeText(parent.getContext(), "Animal selected is " + selectedItem,
-                                Toast.LENGTH_LONG).show();
-                    }
-                    selectedAnimal = selectedItem;
-                    break;
-            }
-
-
+        private AsyncCallPostService(UnitServiceResource unitDeliveryResource) {
+            this.unitServiceResource = unitDeliveryResource;
         }
 
-        public void onNothingSelected(AdapterView<?> parent) {
-            // Do nothing.
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            postService(unitServiceResource);
+            return null;
         }
     }
 
-    //Add animals into spinner dynamically
-    private void createSpinnerDropDown() {
-
-        //get reference to the spinner from the XML layout
-        Spinner spinner = (Spinner) view.findViewById(R.id.spinner1);
-
-        //Array list of animals to display in the spinner
-        List<String> list = new ArrayList<String>();
-        list.add("Bear");
-        list.add("Camel");
-        list.add("Cat");
-        list.add("Cat");
-        list.add("Deer");
-        list.add("Dog");
-        list.add("Goat");
-        list.add("Horse");
-        //create an ArrayAdaptar from the String Array
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, list);
-        //set the view for the Drop down list
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //set the ArrayAdapter to the spinner
-        spinner.setAdapter(dataAdapter);
-        //attach the listener to the spinner
-        spinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
+    public void postService(UnitServiceResource unitDeliveryResource) {
+        DatasourceDAO dao = new DatasourceDAOImpl(getActivity());
+        final CommunicationService communicationService = new CommunicationServiceImpl(dao);
+        communicationService.postService(unitDeliveryResource);
 
     }
 

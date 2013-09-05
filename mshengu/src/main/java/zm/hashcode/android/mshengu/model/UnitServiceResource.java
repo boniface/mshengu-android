@@ -15,6 +15,17 @@ public class UnitServiceResource implements Serializable {
     private String unitId;
     private Map<String, Boolean> services;
     private String incident;
+    private String longitude;
+    private String latitude;
+    private String statusMessage;
+
+    public String getStatusMessage() {
+        return statusMessage;
+    }
+
+    public void setStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
+    }
 
     public String getUnitId() {
         return unitId;
@@ -38,5 +49,21 @@ public class UnitServiceResource implements Serializable {
 
     public void setIncident(String incident) {
         this.incident = incident;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 }

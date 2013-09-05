@@ -36,24 +36,48 @@
     <CheckBox
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Pump-Out"
-            android:id="@+id/pumpout"
+            android:text="Pump Out"
+            android:id="@+id/pumpOut"
             android:checked="false"/>
 
     <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Flush"
-            android:id="@+id/flush"
+            android:text="Wash Bucket"
+            android:id="@+id/washBucket"
             android:layout_gravity="left|center_vertical"
             android:checked="false"/>
 
     <CheckBox
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Chemicals"
-            android:id="@+id/chemical"
+            android:text="Suction Out"
+            android:id="@+id/suctionOut"
             android:checked="false"/>
+
+
+    <CheckBox
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Recharge Backet"
+            android:id="@+id/rechargeBacket"
+            android:checked="false"/>
+
+    <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scrub Floor"
+            android:id="@+id/scrubFloor"
+            android:layout_gravity="left|center_vertical"
+            android:checked="false"/>
+
+    <CheckBox
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Clean Perimeter"
+            android:id="@+id/cleanPerimeter"
+            android:checked="false"/>
+
 
     <ScrollView
             android:layout_width="wrap_content"
@@ -61,41 +85,20 @@
             android:id="@+id/scrollView"
             android:layout_gravity="center"/>
 
-    <EditText
-            android:layout_width="wrap_content"
+    <TextView
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_height="wrap_content"
-            android:text="Comments"
+            android:layout_width="wrap_content"
+            android:text="Report Incident"/>
+
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/comments"/>
 
-    <TextView
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/textView1"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/country_prompt"/>
-
-    <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:prompt="@string/country_prompt"
-            android:entries="@array/country_array"/>
-
-    <TextView
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/textView2"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/animal_prompt"/>
-
-    <Spinner
-            android:id="@+id/spinner1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:prompt="@string/animal_prompt"/>
 
     <Button
-            android:id="@+id/tagButton"
+            android:id="@+id/submit_Service_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="30dp"

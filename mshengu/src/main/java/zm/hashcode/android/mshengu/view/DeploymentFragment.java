@@ -22,7 +22,9 @@ import zm.hashcode.android.mshengu.services.rest.CommunicationService;
 import zm.hashcode.android.mshengu.services.rest.Impl.CommunicationServiceImpl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,11 +34,12 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class DeploymentFragment extends SherlockFragment {
+    private String selectedSite = null;
 
     private EditText unitId;
     private EditText latitude;
     private EditText longitude;
-    private Spinner sitesDropdown;
+    private Spinner siteInput;
     private List<String> list = new ArrayList<String>();
     ;
 
@@ -61,7 +64,6 @@ public class DeploymentFragment extends SherlockFragment {
         longi = location.getLongitude();
 
         view = inflater.inflate(R.layout.deployment_frag, container, false);
-        sitesDropdown = (Spinner) view.findViewById(R.id.sites_drop_down);
         unitId = (EditText) view.findViewById(R.id.unitID);
         latitude = (EditText) view.findViewById(R.id.latitude);
         longitude = (EditText) view.findViewById(R.id.longitude);
@@ -85,35 +87,64 @@ public class DeploymentFragment extends SherlockFragment {
                 unitDeliveryResource.setUnitId(unitId.getText().toString());
                 unitDeliveryResource.setLatitude(latitude.getText().toString());
                 unitDeliveryResource.setLongitude(longitude.getText().toString());
-//                System.out.println("THERE IS THE JUICE "+sitesDropdown.g);
-//                communicationService.postDeployment(unitDeliveryResource);
+                unitDeliveryResource.setSiteId(selectedSite);
+
+                final AsyncCallPost postService = new AsyncCallPost(unitDeliveryResource);
+                postService.execute();
                 unitId.setText("");
                 latitude.setText("");
                 longitude.setText("");
+
+
             }
         });
 
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        sitesDropdown.setAdapter(dataAdapter);
-        sitesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int pos, long id) {
-                System.out.println(" SHOW ME SOME LOVE ");
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                System.out.println("AND HERE TOO ");
-            }
-
-        });
-
+        createSpinnerSiteDropDown();
 
         return view;
+    }
+
+    //Add animals into spinner dynamically
+    private void createSpinnerSiteDropDown() {
+
+        //get reference to the spinner from the XML layout
+        siteInput = (Spinner) view.findViewById(R.id.sites_drop_down);
+        //create an ArrayAdaptar from the String Array
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, list);
+        //set the view for the Drop down list
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //set the ArrayAdapter to the spinner
+        siteInput.setAdapter(dataAdapter);
+        //attach the listener to the spinner
+        siteInput.setOnItemSelectedListener(new MyOnItemSelectedListener());
+
+    }
+
+    public class MyOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
+
+        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+            String selectedItem = parent.getItemAtPosition(pos).toString();
+
+            //check which spinner triggered the listener
+            switch (parent.getId()) {
+                //country spinner
+                case R.id.sites_drop_down:
+                    //make sure the country was already selected during the onCreate
+                    if (selectedSite != null) {
+                        Toast.makeText(parent.getContext(), "Site selected is " + selectedItem,
+                                Toast.LENGTH_LONG).show();
+                    }
+                    selectedSite = selectedItem;
+                    break;
+            }
+
+        }
+
+        public void onNothingSelected(AdapterView<?> parent) {
+            // Do nothing.
+        }
     }
 
 
@@ -126,13 +157,39 @@ public class DeploymentFragment extends SherlockFragment {
         }
     }
 
+    private class AsyncCallPost extends AsyncTask<Void, Void, Void> {
+        final UnitDeliveryResource unitDeliveryResource;
+
+        private AsyncCallPost(UnitDeliveryResource unitDeliveryResource) {
+            this.unitDeliveryResource = unitDeliveryResource;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Log.i(TAG, "doInBackground");
+            postDeployment(unitDeliveryResource);
+            return null;
+        }
+    }
+
     public void getSites() {
         DatasourceDAO dao = new DatasourceDAOImpl(getActivity());
         final CommunicationService communicationService = new CommunicationServiceImpl(dao);
         List<SiteReource> sites = communicationService.getSites();
+        Set<String> uniqueSites = new HashSet<String>();
         for (SiteReource siteReource : sites) {
-            list.add(siteReource.getName());
+
+            uniqueSites.add(siteReource.getName());
         }
+        list.clear();
+        list.addAll(uniqueSites);
+
+    }
+
+    public void postDeployment(UnitDeliveryResource unitDeliveryResource) {
+        DatasourceDAO dao = new DatasourceDAOImpl(getActivity());
+        final CommunicationService communicationService = new CommunicationServiceImpl(dao);
+        communicationService.postDeployment(unitDeliveryResource);
 
     }
 

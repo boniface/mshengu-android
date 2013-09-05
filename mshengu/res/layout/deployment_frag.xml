@@ -12,7 +12,7 @@
             android:layout_margin="10dp"
             android:padding="40dp"
             style="@style/btnStyleGenoa"
-            android:text="Scan Toilet Unit"/>
+            android:text="Scan Unit Tag"/>
 
     <TableLayout
             android:layout_width="match_parent"
@@ -29,13 +29,6 @@
                     android:width="200dp"/>
         </TableRow>
 
-        <TableRow>
-
-        </TableRow>
-
-        <TableRow>
-
-        </TableRow>
 
         <TableRow>
 
@@ -61,17 +54,17 @@
     </TableLayout>
 
     <TextView
-            android:text="Select Site"
-            android:layout_width="match_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/site_input_textView_label"
             android:layout_height="wrap_content"
-            android:width="120dp"/>
+            android:layout_width="wrap_content"
+            android:text="@string/select_site"/>
 
     <Spinner
             android:id="@+id/sites_drop_down"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:prompt="@string/select"/>
-    android:layout_height="wrap_content"/>
+            android:prompt="@string/select_site"/>
 
 
     <Button
